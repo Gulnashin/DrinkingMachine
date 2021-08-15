@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Drinking Machine Program";
+}
+<style>
+    /*Hide app untill ready*/
+    .notready{
+        display:none;
+    }
+
+</style>
+
+<div id="app" class="notready">
+    <div class="row">
+        <h2>{{message}}</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <form action="" method="post">
+                <div class="col-md-3" v-for="product in machine.products" :key="product.id">
+                    <div style="height:100px;">
+                        <h3>{{product.title}}</h3>
+                        <h4>&dollar; {{parseFloat(product.price / 100).toFixed(2)}}</h4>
+                        <h6>left: {{product.stock}}</h6>
+                    </div>
+                    <button id="BtnGetDrink"  @@click="validate(product.availstock);selectProduct(product.id)" class="btn btn-primary" :disabled="product.price<=totalInserted?false:true">Get Drink</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4">
+
+            <p v-for="coin in machine.coins" :key="coin.cents+1"><button class="btn btn-default" style="color: brown; width:150px" @@click="insertCoin(coin)">Insert {{coin.name}} &dollar; {{parseFloat(coin.cents/100).toFixed(2)}}</button></p>
+
+            <h3>Inserted Credit &dollar; {{parseFloat(totalInserted/100).toFixed(2)}}</h3>
+            <p v-for="coin in machine.customerCoins" :key="coin.cents+2">{{coin.quantity}}x &dollar; {{parseFloat(coin.cents/100).toFixed(2)}}</p>
+
+            <button @@click="cancel()" class="btn btn-default" :disabled="totalInserted>0?false:true">Cancel Purchase</button>
+
+            <h3>Total Change &dollar; {{parseFloat(totalChange/100).toFixed(2)}}</h3>
+            <p v-for="coin in machine.changeCoins" :key="coin.cents+3">{{coin.quantity}}x &dollar; {{parseFloat(coin.cents/100).toFixed(2)}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <br />
+            <h4>Coins Information</h4>
+            <p>Available coins</p>
+            <div class="col-md-3" v-for="coin in machine.coins" :key="coin.cents+4">
+                <div style="height:100px;">
+                    <h3>{{coin.name}}</h3>
+                    <h4>{{coin.quantity}}x {{ coin.cents}}</h4>
+                </div>
+
+                <!--<p v-for="coin in machine.coins" :key="coin.cents+4">{{coin.name}} &nbsp;&nbsp;{{coin.quantity}}x {{ coin.cents}}</p>-->
+            </div>
+            <button @@click="restock()" class="btn btn-danger">Restock and Reset</button>
+        </div>
+</div>
